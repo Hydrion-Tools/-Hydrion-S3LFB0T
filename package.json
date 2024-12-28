@@ -1,0 +1,19 @@
+{
+  "name": "hydrion-selfbot",
+  "version": "1.0.0",
+  "description": "Welcome to **Hydrion S3LFB0T**, an advanced and feature-rich selfbot for Discord that helps you automate tasks and enhance your Discord experience with ease. 🚀",
+  "main": "index.js",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.9",
+    "discord.js-selfbot-v13": "^3.4.2",
+    "express": "^4.21.2",
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7"
+  },
+  "keywords": [],
+  "author": "Hydra_devx",
+  "license": "ISC"
+}
