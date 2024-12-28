@@ -2,7 +2,7 @@
   "name": "hydrion-selfbot",
   "version": "1.0.0",
   "description": "Welcome to **Hydrion S3LFB0T**, an advanced and feature-rich selfbot for Discord that helps you automate tasks and enhance your Discord experience with ease. 🚀",
-  "main": "index.js",
+  "main": "bot.js",
   "scripts": {
     "start": "node bot.js"
   },

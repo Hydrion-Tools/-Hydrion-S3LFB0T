@@ -1,6 +1,6 @@
 const { Client, Collection } = require("discord.js-selfbot-v13");
 const fs = require("fs");
-const path = require('path');
+const path = require("path");
 const config = JSON.parse(fs.readFileSync("./config.json", "utf8"));
 
 const client = new Client();
@@ -15,39 +15,55 @@ for (const file of commandFiles) {
   client.commands.set(command.name, command);
 }
 
-client.once("ready", () => {
-  console.log(`Selfbot started and logged into ${client.user.tag}`);
-});
-
-const token = config.token;
 let afkReason = '';
 let afkStatus = false;
 let afkStartTime = null;
 let spamInterval = null;
 let raidActive = false;
 let raidInterval = null;
-let prefix = config.prefix || "?";
 let raidsEnabled = false;
-const enableRaidsMessage = `💥 Enable raids by using ${prefix}enableraids`;
-const disableRaidsMessage = `💥 Disable raids by using ${prefix}disableraids`;
+const enableRaidsMessage = `💥 Enable raids by using ${config.prefix}enableraids`;
+const disableRaidsMessage = `💥 Disable raids by using ${config.prefix}disableraids`;
 
-module.exports = { prefix, afkReason, afkStatus, afkStartTime, spamInterval, raidActive, raidInterval, raidsEnabled, enableRaidsMessage, disableRaidsMessage };
+client.once("ready", () => {
+  console.log(`Selfbot started and logged into ${client.user.tag}`);
+});
 
-client.on('messageCreate', async (message) => {
-  if (message.author.id !== client.user.id) return;
-  if (!message.content.startsWith(prefix)) return;
+client.on("messageCreate", async (message) => {
+  if (message.author.id !== client.user.id) {
+    if (afkStatus && message.mentions.has(client.user)) {
+      message.reply(`💤 I'm currently AFK. Reason: ${afkReason}`);
+    }
+    return;
+  }
 
-  const args = message.content.slice(prefix.length).trim().split(/ +/);
+  if (!message.content.startsWith(config.prefix)) return;
+
+  const args = message.content.slice(config.prefix.length).trim().split(/ +/);
   const commandName = args.shift().toLowerCase();
 
-  const command = client.commands.get(commandName)|| client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+  const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
   if (!command) return;
 
   try {
-    await command.execute(message.args);
+    await command.execute(message, args);
   } catch (error) {
     console.error(error);
   }
-})
+});
 
-client.login(token);
+client.login(config.token);
+
+module.exports = { 
+  client, 
+  afkReason, 
+  afkStatus, 
+  afkStartTime, 
+  spamInterval, 
+  raidActive, 
+  raidInterval, 
+  raidsEnabled, 
+  enableRaidsMessage, 
+  disableRaidsMessage, 
+  prefix: config.prefix 
+};
